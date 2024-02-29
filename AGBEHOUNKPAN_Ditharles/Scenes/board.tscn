@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://bjbetbqj75r1p"]
+
+[ext_resource type="Script" path="res://Scripts/Board.gd" id="1_c5hwo"]
+[ext_resource type="Texture2D" uid="uid://bsfjpc04cyqdm" path="res://Assets/chess.png" id="1_u7stp"]
+[ext_resource type="Texture2D" uid="uid://brmgfagnie02m" path="res://Assets/pieces.png" id="2_fa5a0"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eh3p8"]
+resource_name = "Board"
+texture = ExtResource("1_u7stp")
+separation = Vector2i(0, 21)
+texture_region_size = Vector2i(75, 75)
+0:0/0 = 0
+0:1/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_prp2t"]
+resource_name = "Pieces"
+texture = ExtResource("2_fa5a0")
+texture_region_size = Vector2i(60, 60)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:1/0 = 0
+3:1/0 = 0
+2:1/0 = 0
+1:1/0 = 0
+0:1/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+5:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_8xwwy"]
+tile_size = Vector2i(75, 75)
+sources/0 = SubResource("TileSetAtlasSource_eh3p8")
+sources/1 = SubResource("TileSetAtlasSource_prp2t")
+
+[node name="Board" type="TileMap"]
+tile_set = SubResource("TileSet_8xwwy")
+rendering_quadrant_size = 8
+format = 2
+layer_0/name = "Squares"
+layer_1/name = "Pieces"
+layer_1/tile_data = PackedInt32Array()
+script = ExtResource("1_c5hwo")
