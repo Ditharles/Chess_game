@@ -5,6 +5,8 @@ var GRID_SIZE: int = 8
 var piece_to_atlas_coords = {}
 var board = {}
 
+signal piece_selected(position: Vector2i)
+
 func _init_board():
 	for i in range(GRID_SIZE):
 		for j in range(GRID_SIZE):
@@ -67,6 +69,16 @@ func set_board(fen: String):
 #MOVEMENT
 var selected_piece_position: Vector2i = Vector2i(-1 , -1)
 
+enum PieceColor { BLACK , WHITE}
+
+func get_color(piece: String) -> PieceColor:
+	var blackpieces = 'qkrnbp'
+	return PieceColor.BLACK if piece in blackpieces else PieceColor.WHITE
+
+func are_different_colors(piece1: String, piece2: String):
+	return get_color(piece1) != get_color(piece2)
+
+
 func highlight_positions (positions: Array[Vector2i]):
 	for position in positions:
 		set_cell(2,position, 2, Vector2i.ZERO)
@@ -125,6 +137,7 @@ func move_piece(from_position: Vector2i, to_position:Vector2i):
 
 func _input(event):
 	if event is InputEventMouseButton :
+		clear_highlights()
 		if event.get_button_index() == MOUSE_BUTTON_LEFT and event.is_pressed():
 			var click_position=local_to_map(get_local_mouse_position())
 			if selected_piece_position == Vector2i(-1, -1) :
@@ -133,12 +146,19 @@ func _input(event):
 					selected_piece_position = Vector2i(-1 , -1)
 				selected_piece_position=click_position
 				print('Selected pieces at  position: ',selected_piece_position)
-				var valid_more_positions=generate_valid_move_positions(selected_piece_position)
-				highlight_positions(valid_more_positions)
-				
+				emit_signal("piece_selected",selected_piece_position)
 			else :
-			#piece already selected, attempt to move the piece 
 				if _is_position_within_bounds(click_position) : 
+					#piece already selected 
+					var already_selected_piece = board[selected_piece_position]
+					if board[click_position] != null:
+						#the is a place at a target positioncheck if friendly piece selected
+						if not are_different_colors(already_selected_piece, board[click_position]):
+							# change selection to the new piece
+							selected_piece_position=click_position
+							emit_signal("piece_selected",selected_piece_position)
+							return
+					#attempt to move the piece 
 					print('Move requests from : ', selected_piece_position , ' to :', click_position)
 					if is_valid_move(selected_piece_position, click_position) :
 						move_piece(selected_piece_position,click_position)
@@ -146,3 +166,9 @@ func _input(event):
 				selected_piece_position = Vector2i(-1 , -1)
 			print(click_position)
 			
+
+
+func _on_piece_selected(position):
+	var valid_more_positions=generate_valid_move_positions(position)
+	highlight_positions(valid_more_positions)
+	

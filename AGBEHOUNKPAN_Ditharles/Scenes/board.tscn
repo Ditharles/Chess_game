@@ -29,6 +29,16 @@ texture_region_size = Vector2i(60, 60)
 4:0/0 = 0
 5:0/0 = 0
 5:1/0 = 0
+6:0/0 = 0
+6:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+7:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vl87r"]
 resource_name = "Highlights"
@@ -247,3 +257,5 @@ layer_1/tile_data = PackedInt32Array()
 layer_2/name = "PossibleMove"
 layer_2/tile_data = PackedInt32Array()
 script = ExtResource("1_c5hwo")
+
+[connection signal="piece_selected" from="." to="." method="_on_piece_selected"]
