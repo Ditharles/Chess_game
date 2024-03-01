@@ -2,7 +2,6 @@ extends TileMap
 
 var GRID_SIZE: int = 8
 
-# Utilisons un nom plus descriptif pour le dictionnaire et spécifions les types de données
 var piece_to_atlas_coords = {}
 var board = {}
 
@@ -68,6 +67,16 @@ func set_board(fen: String):
 #MOVEMENT
 var selected_piece_position: Vector2i = Vector2i(-1 , -1)
 
+func highlight_positions (positions: Array[Vector2i]):
+	for position in positions:
+		set_cell(2,position, 2, Vector2i.ZERO)
+
+func clear_highlights():
+	var highlight_cells = get_used_cells(2)
+	for cell in highlight_cells:
+		set_cell(2,Vector2i(cell.x, cell.y))
+	
+
 func _is_position_within_bounds(position: Vector2i) -> bool :
 	if position.x < 0 or position.x >7 :
 		return false
@@ -75,14 +84,38 @@ func _is_position_within_bounds(position: Vector2i) -> bool :
 		return false
 	return true
 
+func generate_valid_pawn_positions(piece: String,from_position: Vector2i) -> Array[Vector2i] :
 
-func is_valid_pawn_move():
-	pass
+	var direction = Vector2i.UP if piece == 'P' else Vector2i.DOWN
+	var base_position = 6 if piece == 'P' else 1
+	var valid_positions: Array[Vector2i] = []
+	
+	valid_positions.append(from_position + direction)
+	
+	#base position, two steps allowed
+	if from_position.y == base_position :
+		valid_positions.append(from_position + (direction * 2))
+
+	return valid_positions
+
+func generate_valid_move_positions(from_position: Vector2i) -> Array[Vector2i]:
+	var piece = board[from_position]
+
+	if piece == 'p' or piece == 'P':
+		if piece == 'p':
+			return generate_valid_pawn_positions('p', from_position)
+		else:
+			return generate_valid_pawn_positions('P', from_position)
+	return []
+
+
 func is_valid_move(from_position: Vector2i, to_position: Vector2i) :
 	# check within bounds
 	if not _is_position_within_bounds(from_position) or not _is_position_within_bounds(to_position):
 		return false
-	return true
+	
+	var valid_move_positions = generate_valid_move_positions(from_position)
+	return to_position in valid_move_positions
 	
 	
 func move_piece(from_position: Vector2i, to_position:Vector2i):
@@ -100,12 +133,16 @@ func _input(event):
 					selected_piece_position = Vector2i(-1 , -1)
 				selected_piece_position=click_position
 				print('Selected pieces at  position: ',selected_piece_position)
+				var valid_more_positions=generate_valid_move_positions(selected_piece_position)
+				highlight_positions(valid_more_positions)
+				
 			else :
 			#piece already selected, attempt to move the piece 
 				if _is_position_within_bounds(click_position) : 
 					print('Move requests from : ', selected_piece_position , ' to :', click_position)
 					if is_valid_move(selected_piece_position, click_position) :
 						move_piece(selected_piece_position,click_position)
+				clear_highlights()
 				selected_piece_position = Vector2i(-1 , -1)
 			print(click_position)
 			
