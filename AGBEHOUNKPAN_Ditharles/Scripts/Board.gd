@@ -89,12 +89,10 @@ func clear_highlights():
 		set_cell(2,Vector2i(cell.x, cell.y))
 	
 
-func _is_position_within_bounds(position: Vector2i) -> bool :
-	if position.x < 0 or position.x >7 :
-		return false
-	if position.y < 0 or position.y >7 :
-		return false
-	return true
+
+
+func _is_position_occupied(position: Vector2i) ->bool:
+	return position in board and board[position] != null 
 
 func generate_valid_pawn_positions(piece: String,from_position: Vector2i) -> Array[Vector2i] :
 
@@ -102,28 +100,57 @@ func generate_valid_pawn_positions(piece: String,from_position: Vector2i) -> Arr
 	var base_position = 6 if piece == 'P' else 1
 	var valid_positions: Array[Vector2i] = []
 	
-	valid_positions.append(from_position + direction)
+	var target_position= from_position+direction
+	if not _is_position_occupied(target_position):
+		valid_positions.append(target_position)
 	
 	#base position, two steps allowed
 	if from_position.y == base_position :
-		valid_positions.append(from_position + (direction * 2))
-
+		target_position=from_position + (direction * 2)
+		if not _is_position_occupied(target_position):
+			valid_positions.append(target_position)
+	#capture positions
+	#if in any of the 2 diagonales, there is an opponen piece, it's a valid position
+	var diagonal_positions= [from_position + direction + Vector2i.RIGHT, from_position+ direction + Vector2i.LEFT]
+	for position in diagonal_positions:
+		if _is_position_occupied(position):
+			if are_different_colors(piece, board[position]):
+				valid_positions.append(position)
 	return valid_positions
 
+func generate_valid_rook_positions(piece: String, from_position: Vector2i) -> Array[Vector2i] :
+	var valid_positions: Array[Vector2i] = []
+	
+	for direction in [Vector2i.UP,Vector2i.LEFT,Vector2i.RIGHT,Vector2i.DOWN] :
+		var target_position = from_position + direction
+		while target_position in board and not _is_position_occupied(target_position) :
+			valid_positions.append(target_position)
+			target_position+=direction
+		if target_position in board:
+			if are_different_colors(piece,board[target_position]):
+				#capture
+				valid_positions.append(target_position)
+	return valid_positions
+	
 func generate_valid_move_positions(from_position: Vector2i) -> Array[Vector2i]:
 	var piece = board[from_position]
 
+	var valid_move_positions = []
+	
 	if piece == 'p' or piece == 'P':
-		if piece == 'p':
-			return generate_valid_pawn_positions('p', from_position)
-		else:
-			return generate_valid_pawn_positions('P', from_position)
-	return []
+		valid_move_positions = generate_valid_pawn_positions(piece, from_position)
+		
+	elif piece== 'r' or piece == 'R':
+		valid_move_positions = generate_valid_rook_positions(piece, from_position)
+	elif piece== 'n' or piece == 'n':
+		valid_move_positions = generate_valid_rook_positions(piece, from_position)
+	
+	return valid_move_positions
 
 
 func is_valid_move(from_position: Vector2i, to_position: Vector2i) :
 	# check within bounds
-	if not _is_position_within_bounds(from_position) or not _is_position_within_bounds(to_position):
+	if from_position not in board or  to_position not in board:
 		return false
 	
 	var valid_move_positions = generate_valid_move_positions(from_position)
@@ -137,18 +164,19 @@ func move_piece(from_position: Vector2i, to_position:Vector2i):
 
 func _input(event):
 	if event is InputEventMouseButton :
-		clear_highlights()
+		
 		if event.get_button_index() == MOUSE_BUTTON_LEFT and event.is_pressed():
 			var click_position=local_to_map(get_local_mouse_position())
+			clear_highlights()
 			if selected_piece_position == Vector2i(-1, -1) :
 			# piece is not selected yet, update selected place posiion
-				if _is_position_within_bounds(click_position) and board[click_position] != null : 
+				if click_position in board and board[click_position] != null : 
 					selected_piece_position = Vector2i(-1 , -1)
 				selected_piece_position=click_position
 				print('Selected pieces at  position: ',selected_piece_position)
 				emit_signal("piece_selected",selected_piece_position)
 			else :
-				if _is_position_within_bounds(click_position) : 
+				if click_position in board : 
 					#piece already selected 
 					var already_selected_piece = board[selected_piece_position]
 					if board[click_position] != null:
