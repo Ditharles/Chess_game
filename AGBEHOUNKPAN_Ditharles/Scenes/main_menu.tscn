@@ -1,0 +1,130 @@
+[gd_scene load_steps=8 format=3 uid="uid://b40ex27w23lne"]
+
+[ext_resource type="FontFile" uid="uid://sr6j0un2amc" path="res://Poppins-Black.ttf" id="1_dl7ua"]
+[ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_fp0lo"]
+[ext_resource type="FontFile" uid="uid://bbmxny1sl464k" path="res://Assets/Inter/static/Inter-Black.ttf" id="2_ropkq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chv6r"]
+bg_color = Color(0.101961, 0.0235294, 0.0156863, 0.392157)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf2lo"]
+bg_color = Color(0.302124, 0.0262767, 0.1466, 0.490196)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ygv7b"]
+bg_color = Color(0.27451, 0.0745098, 0.192157, 0.588235)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k0yo0"]
+bg_color = Color(0.258824, 0.101961, 0.027451, 0.588235)
+
+[node name="MainMenu" type="Node2D"]
+position = Vector2(8, 0)
+scale = Vector2(0.892299, 0.893364)
+script = ExtResource("1_fp0lo")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -8.0
+offset_right = 1138.0
+offset_bottom = 639.0
+scale = Vector2(1.14406, 1.18835)
+color = Color(0.2, 0.105882, 0.188235, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_left = -8.9656
+offset_right = 1277.03
+offset_bottom = 646.0
+scale = Vector2(1.009, 1.14641)
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 75
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 75
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+auto_translate = false
+localize_numeral_system = false
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("1_dl7ua")
+theme_override_font_sizes/font_size = 75
+text = "Chess Games"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
+
+[node name="New_game" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 0
+theme_override_constants/icon_max_width = 0
+theme_override_fonts/font = ExtResource("2_ropkq")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_chv6r")
+theme_override_styles/hover = SubResource("StyleBoxFlat_yf2lo")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ygv7b")
+theme_override_styles/focus = SubResource("StyleBoxFlat_k0yo0")
+text = "New Game"
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
+
+[node name="Option" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 0
+theme_override_constants/icon_max_width = 0
+theme_override_fonts/font = ExtResource("2_ropkq")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_chv6r")
+theme_override_styles/hover = SubResource("StyleBoxFlat_yf2lo")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ygv7b")
+theme_override_styles/focus = SubResource("StyleBoxFlat_k0yo0")
+text = "Options"
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
+
+[node name="Made by" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 0
+theme_override_constants/icon_max_width = 0
+theme_override_fonts/font = ExtResource("2_ropkq")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_chv6r")
+theme_override_styles/hover = SubResource("StyleBoxFlat_yf2lo")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ygv7b")
+theme_override_styles/focus = SubResource("StyleBoxFlat_k0yo0")
+text = "Made by"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/MarginContainer/New_game" to="." method="_on_new_game_pressed"]

@@ -122,8 +122,8 @@ func _input(event):
 						set_cell(0, click_position, 3, Vector2i(0,0))
 			else:
 				_init_chess_design()
-				set_cell(0, click_position, 3, Vector2i(0,0))
 				if click_position in board:
+					set_cell(0, click_position, 3, Vector2i(0,0))
 					var already_selected_piece = board[selected_piece_position]
 					if board[click_position] != null:
 						if not are_different_colors(already_selected_piece, board[click_position]):
