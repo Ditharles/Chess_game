@@ -65,6 +65,8 @@ func clear_highlights():
 func _is_position_occupied(position: Vector2i) -> bool:
 	return position in board and board[position] != null
 
+
+
 func generate_valid_move_positions(from_position: Vector2i) -> Array[Vector2i]:
 	var piece = board[from_position]
 	var valid_move_positions: Array[Vector2i] = []
@@ -89,6 +91,7 @@ func generate_valid_move_positions(from_position: Vector2i) -> Array[Vector2i]:
 		valid_move_positions = bishop_move.generate_valid_positions(from_position, board) + rook_move.generate_valid_positions(from_position, board)
 	elif piece == 'k' or piece == 'K':
 		valid_move_positions = king_move.generate_valid_positions(from_position, board)
+		
 		
 	for position in valid_move_positions :
 		if _is_position_occupied(position):
