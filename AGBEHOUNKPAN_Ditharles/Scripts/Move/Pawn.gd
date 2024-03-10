@@ -2,7 +2,7 @@
 
 extends Node
 
-func generate_valid_pawn_positions(from_position: Vector2i, board: Dictionary) -> Array[Vector2i]:
+func generate_valid_positions(from_position: Vector2i, board: Dictionary) -> Array[Vector2i]:
 	var piece = board[from_position]
 	var direction = Vector2i.UP if piece == 'P' else Vector2i.DOWN
 	var base_position = 6 if piece == 'P' else 1

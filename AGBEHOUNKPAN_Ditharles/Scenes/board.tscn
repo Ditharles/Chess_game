@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://bjbetbqj75r1p"]
+[gd_scene load_steps=11 format=3 uid="uid://bjbetbqj75r1p"]
 
 [ext_resource type="Script" path="res://Scripts/Board.gd" id="1_c5hwo"]
 [ext_resource type="Texture2D" uid="uid://bsfjpc04cyqdm" path="res://Assets/chess.png" id="1_u7stp"]
 [ext_resource type="Texture2D" uid="uid://brmgfagnie02m" path="res://Assets/pieces.png" id="2_fa5a0"]
+[ext_resource type="Texture2D" uid="uid://bvseihjv3j5eg" path="res://Assets/Highlights.png" id="3_82xvh"]
 [ext_resource type="Texture2D" uid="uid://cujj03ty3nowe" path="res://Assets/move.png" id="3_arux5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eh3p8"]
@@ -241,11 +242,18 @@ texture_region_size = Vector2i(15, 15)
 12:13/0 = 0
 13:13/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kxsnj"]
+resource_name = "Selected"
+texture = ExtResource("3_82xvh")
+texture_region_size = Vector2i(74, 74)
+0:0/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_8xwwy"]
 tile_size = Vector2i(75, 75)
 sources/0 = SubResource("TileSetAtlasSource_eh3p8")
 sources/1 = SubResource("TileSetAtlasSource_prp2t")
 sources/2 = SubResource("TileSetAtlasSource_vl87r")
+sources/3 = SubResource("TileSetAtlasSource_kxsnj")
 
 [node name="Board" type="TileMap"]
 tile_set = SubResource("TileSet_8xwwy")
@@ -258,4 +266,5 @@ layer_2/name = "PossibleMove"
 layer_2/tile_data = PackedInt32Array()
 script = ExtResource("1_c5hwo")
 
+[connection signal="piece_move" from="." to="." method="_on_piece_move"]
 [connection signal="piece_selected" from="." to="." method="_on_piece_selected"]

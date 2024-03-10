@@ -2,7 +2,7 @@
 
 extends Node
 
-func generate_valid_bishop_positions(from_position: Vector2i, board: Dictionary) -> Array[Vector2i]:
+func generate_valid_positions(from_position: Vector2i, board: Dictionary) -> Array[Vector2i]:
 	var valid_positions: Array[Vector2i] = []
 	
 	for direction in [Vector2i(1, 1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(-1, -1)]:
