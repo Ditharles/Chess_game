@@ -6,6 +6,7 @@ const KnightMove = preload("res://Scripts/Move/Knight.gd")
 const BishopMove = preload("res://Scripts/Move/Bishop.gd")
 const KingMove = preload("res://Scripts/Move/King.gd")
 
+
 signal piece_selected(position: Vector2i)
 signal piece_move(piece: String)
 
@@ -14,6 +15,7 @@ func _ready():
 	_init_piece_to_atlas_coords()
 	_init_chess_design()
 	set_board('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+
 
 func set_piece_at_position(piece: String, position: Vector2i):
 	set_cell(1, position, 1, piece_to_atlas_coords[piece])
