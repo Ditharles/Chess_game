@@ -455,7 +455,7 @@ func assert_not_between(got, expect_low, expect_high, text=""):
 # ------------------------------------------------------------------------------
 func assert_has(obj, element, text=""):
 	var disp = str('Expected [', _str(obj), '] to contain value:  [', _str(element), ']:  ', text)
-	if(obj.has(element)):
+	if(obj in element):
 		_pass(disp)
 	else:
 		_fail(disp)
@@ -464,7 +464,7 @@ func assert_has(obj, element, text=""):
 # ------------------------------------------------------------------------------
 func assert_does_not_have(obj, element, text=""):
 	var disp = str('Expected [', _str(obj), '] to NOT contain value:  [', _str(element), ']:  ', text)
-	if(obj.has(element)):
+	if(obj in element):
 		_fail(disp)
 	else:
 		_pass(disp)

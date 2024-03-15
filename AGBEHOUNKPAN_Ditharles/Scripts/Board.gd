@@ -1,30 +1,41 @@
+# Init.gd
+
 extends "res://Scripts/Init.gd"
 
+# Importing scripts for piece movements
 const PawnMove = preload("res://Scripts/Move/Pawn.gd")
 const RookMove = preload("res://Scripts/Move/Rook.gd")
 const KnightMove = preload("res://Scripts/Move/Knight.gd")
 const BishopMove = preload("res://Scripts/Move/Bishop.gd")
 const KingMove = preload("res://Scripts/Move/King.gd")
 
-
+# Signal emitted when a piece is selected
 signal piece_selected(position: Vector2i)
+# Signal emitted when a piece is moved
 signal piece_move(piece: String)
 
+# Function called when the game starts
 func _ready():
+	# Initializes the game board
 	_init_board()
+	# Initializes the piece coordinates on the atlas
 	_init_piece_to_atlas_coords()
+	# Initializes the chess game design
 	_init_chess_design()
+	# Sets the initial state of the board based on the FEN notation
 	set_board('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
 
-
+# Places a piece at a given position
 func set_piece_at_position(piece: String, position: Vector2i):
 	set_cell(1, position, 1, piece_to_atlas_coords[piece])
 	board[position] = piece
 
+# Clears a given position
 func clear_position(position: Vector2i):
 	set_cell(1, position)
 	board[position] = null
 
+# Sets the board state from a FEN notation
 func set_board(fen: String):
 	var fen_parts = fen.split(' ')
 	var piece_placement_data = fen_parts[0]
@@ -43,38 +54,42 @@ func set_board(fen: String):
 				board[position] = value
 				col += 1
 
+# Currently selected position by the player
 var selected_piece_position: Vector2i = Vector2i(-1 , -1)
+# Color of the piece currently being moved
 var current_move = PieceColor.WHITE
 
+# Enumeration of piece colors
 enum PieceColor { BLACK, WHITE }
 
+# Returns the color of a given piece
 func get_color(piece: String) -> PieceColor:
 	var black_pieces = 'qkrnbp'
 	return PieceColor.BLACK if piece in black_pieces else PieceColor.WHITE
 
+# Checks if two pieces are of different colors
 func are_different_colors(piece1: String, piece2: String):
 	return get_color(piece1) != get_color(piece2)
 
+# Highlights the given positions on the game board
 func highlight_positions(positions: Array[Vector2i]):
 	for position in positions:
 		set_cell(2, position, 2, Vector2i.ZERO)
 
+# Clears the highlights of positions on the game board
 func clear_highlights():
 	var highlight_cells = get_used_cells(2)
 	for cell in highlight_cells:
 		set_cell(2, Vector2i(cell.x, cell.y))
 
+# Checks if a given position is occupied by a piece
 func _is_position_occupied(position: Vector2i) -> bool:
 	return position in board and board[position] != null
 
-
-
+# Generates valid move positions for a given piece from a starting position
 func generate_valid_move_positions(from_position: Vector2i) -> Array[Vector2i]:
 	var piece = board[from_position]
 	var valid_move_positions: Array[Vector2i] = []
-	
-
-	
 	var pawn_move = PawnMove.new()
 	var rook_move = RookMove.new()
 	var knight_move = KnightMove.new()
@@ -100,6 +115,7 @@ func generate_valid_move_positions(from_position: Vector2i) -> Array[Vector2i]:
 			set_cell(0, position, 3, Vector2i(0,0))
 	return valid_move_positions
 
+# Checks if a move from the starting position to the destination position is valid
 func is_valid_move(from_position: Vector2i, to_position: Vector2i):
 	if from_position not in board or to_position not in board:
 		return false
@@ -107,13 +123,15 @@ func is_valid_move(from_position: Vector2i, to_position: Vector2i):
 	var valid_move_positions = generate_valid_move_positions(from_position)
 	return to_position in valid_move_positions
 
+# Moves a piece from a starting position to a destination position
 func move_piece(from_position: Vector2i, to_position: Vector2i):
 	var piece = board[from_position]
 	emit_signal("piece_move", piece)
 	set_piece_at_position(piece, to_position)
 	clear_position(from_position)
-	_init_chess_design() # Réinitialiser le design de l'échiquier après le mouvement
+	_init_chess_design() 
 
+# Handles user interactions
 func _input(event):
 	if event is InputEventMouseButton:
 		if event.get_button_index() == MOUSE_BUTTON_LEFT and event.is_pressed():
@@ -143,11 +161,13 @@ func _input(event):
 				selected_piece_position = Vector2i(-1, -1)
 				_init_chess_design()
 
+# Handles the event when a piece is selected
 func _on_piece_selected(position):
 	var valid_move_positions = generate_valid_move_positions(position)
 	highlight_positions(valid_move_positions)
 	
 
+# Handles the event when a piece is moved
 func _on_piece_move(piece):
 	if current_move == PieceColor.BLACK:
 		current_move = PieceColor.WHITE
